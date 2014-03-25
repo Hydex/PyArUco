@@ -19,12 +19,6 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSE
 ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-The views and conclusions contained in the software and documentation are those of the
-authors and should not be interpreted as representing official policies, either expressed
-or implied, of Rafael Muñoz Salinas.
-
- 
  
  \mainpage PyArUco: Augmented Reality library
 
@@ -81,5 +75,6 @@ For testing the applications, the library provides videos and the corresponding 
 \section Final Notes
 
  - REQUIREMENTS: OpenCv >= 2.1.0. and OpenGL for (aruco_test_gl and aruco_test_board_gl)
- - CONTACT: Rafael Munoz-Salinas: rmsalinas@uco.es
+ - Original CONTACT: Rafael Munoz-Salinas: rmsalinas@uco.es
+ - My contact: saurav6@gmail.com
  - This libary is free software and come with no guaratee!

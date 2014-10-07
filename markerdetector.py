@@ -2,6 +2,8 @@ import numpy
 import math
 import cv2 as cv
 from marker import Marker
+
+    
 '''
 Detects markers in the input image.
 '''
@@ -76,7 +78,7 @@ class MarkerDetector:
 
 		# By default, erosion is disabled in C++ version, so we don't implement it
 
-		#markerCandidates = detectRectangles(self.thres)
+		markerCandidates = self.detectRectangles(self.thres)
 
 		return self.thres
 
@@ -84,8 +86,8 @@ class MarkerDetector:
 
 
 	'''
-	In the origianl C++ library, there are 3 thresholding methods to choose from, However only
-	adaptive is provided here because it performs the best.
+	In the originall C++ library, there are 3 thresholding methods to choose from, However only
+	adaptive/canny is provided here because it performs the best.
 	'''
 	def threshold(self, gray, param1, param2):
 
@@ -101,12 +103,8 @@ class MarkerDetector:
 		elif param1%2 != 1:
 			param1 = param1+1
 
-		thresholdedImage = cv.adaptiveThreshold(gray,255,cv.ADAPTIVE_THRESH_MEAN_C,cv.THRESH_BINARY_INV,param1,param2)
-
-		markercands = self.detectRectangles(thresholdedImage)
-
-		for m in markercands:
-			print m.corners
+		#thresholdedImage = cv.adaptiveThreshold(gray,255,cv.ADAPTIVE_THRESH_MEAN_C,cv.THRESH_BINARY_INV,param1,param2)
+		thresholdedImage = cv.Canny(gray,10,220)
 
 		return thresholdedImage
 
@@ -122,6 +120,8 @@ class MarkerDetector:
 		self.thres2 = thresImg
 
 		contours2, hierarchy2 = cv.findContours(self.thres2, cv.RETR_TREE, cv.CHAIN_APPROX_NONE)
+
+		counterIndx = 0
 
 		for contour in contours2:
 
@@ -147,8 +147,29 @@ class MarkerDetector:
 						if minDist > 10:
 
 							m = Marker(approxCurve)
-							m.candidateIdx = contours2.index(contour)
+							m.candidateIdx = counterIndx
 							markerCandidates.append(m)
+			counterIndx += 1
+
+		#arrange in anti-clockiwise
+		swapped = []
+		for i in range(0,len(markerCandidates)):
+
+			dx1 = markerCandidates[i].corners[1][0] - markerCandidates[i].corners[0][0]
+			dy1 = markerCandidates[i].corners[1][1] - markerCandidates[i].corners[0][1]
+			dx2 = markerCandidates[i].corners[2][0] - markerCandidates[i].corners[0][0]
+			dy2 = markerCandidates[i].corners[2][1] - markerCandidates[i].corners[0][1]
+
+			o = ( dx1*dy2 )- ( dy1*dx2 )
+
+			if(o < 0.0):
+
+				markerCandidates[i].corners[1], markerCandidates[i].corners[3] = markerCandidates[i].corners[3], markerCandidates[i].corners[1]			
+				swapped.append(True)
+			else:
+				swapped.append(False)
+
+		#remove those elements whose corners are too close to each other
 
 		return markerCandidates
 
